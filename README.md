@@ -18,10 +18,10 @@ Este projeto realiza a extração, pré-processamento e análise exploratória d
 ## Configuração do Dataset
 
 1.  Faça o download do **NIH Chest X-ray Dataset** a partir do Kaggle: [https://www.kaggle.com/datasets/nih-chest-xrays/data](https://www.kaggle.com/datasets/nih-chest-xrays/data)
-2.  O download incluirá vários arquivos `.zip` contendo as imagens (`images_001.zip` a `images_012.zip`) e um arquivo CSV (`Data_Entry_2017.csv`).
+2.  O download incluirá vários arquivos `.zip` contendo as imagens (diretórios `images_001` a `images_012`) e um arquivos CSV (`Data_Entry_2017.csv`).
 3.  Crie uma pasta chamada `archive` na raiz deste projeto.
 4.  Copie o arquivo `Data_Entry_2017.csv` diretamente para a pasta `archive/`.
-5.  **Importante:** Extraia *todo* o conteúdo dos arquivos `images_XXX.zip` para subpastas dentro de `archive/`, mantendo a estrutura original. Por exemplo, o conteúdo de `images_001.zip` deve ser extraído para `archive/images_001/`, o conteúdo de `images_002.zip` para `archive/images_002/`, e assim por diante. Certifique-se de que as imagens `.png` estejam nas subpastas `images` dentro dessas pastas (ex: `archive/images_001/images/00000001_000.png`).
+5.  **Importante:** Extraia *todo* o conteúdo dos arquivos para subpastas dentro de `archive/`, mantendo a estrutura original. Por exemplo, o conteúdo de `images_001` deve ser extraído para `archive/images_001/`, o conteúdo de `images_002` para `archive/images_002/`, e assim por diante. Certifique-se de que as imagens `.png` estejam nas subpastas `images` dentro dessas pastas (ex: `archive/images_001/images/00000001_000.png`).
 
 ## Estrutura do Projeto
 
