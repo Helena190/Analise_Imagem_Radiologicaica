@@ -1,0 +1,6 @@
+Nome da Coluna,Tipo de Dado,Descrição dos Valores (quando aplicável)
+Image Index,object,Nome do arquivo de imagem
+Finding Labels,int64,"0: Sem achado ('No Finding'), 1: Efusão ('Effusion')"
+Patient Age,int64,Idade do paciente em anos
+Patient Gender,int64,"0: Masculino ('M'), 1: Feminino ('F')"
+View Position,int64,"0: Posteroanterior ('PA'), 1: Anteroposterior ('AP')"

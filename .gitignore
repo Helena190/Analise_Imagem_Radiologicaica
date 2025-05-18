@@ -1,0 +1,6 @@
+archive/
+data/test/
+data/train/
+data/validation
+.venv/
+.ipynb_checkpoints/
