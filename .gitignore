@@ -30,7 +30,7 @@ env/
 Thumbs.db
 
 # Data and Reports
-data/
-reports/
-models/
-logs/
+/data/
+/reports/
+/models/
+/logs/
