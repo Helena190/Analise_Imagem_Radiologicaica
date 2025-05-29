@@ -68,7 +68,7 @@ Para configurar e instalar o ambiente do projeto, siga os passos abaixo:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <URL_DO_REPOSITORIO>
+    git clone https://github.com/Helena190/Analise_Imagem_Radiologicaica
     cd efusao-raiox
     ```
 2.  **Crie e ative um ambiente virtual (recomendado):**
@@ -119,4 +119,3 @@ Você pode ajustar o nível de detalhe dos logs usando a flag `--log_level`. Os 
     python -m src.main --all --log_level DEBUG
     ```
 
-Os logs são gravados no arquivo [`logs/app.log`](logs/app.log).
