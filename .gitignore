@@ -1,18 +1,36 @@
-# Byte-code files
-*.pyc
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.pytest_cache/
 
-# Virtual environment
-.venv/
+# Distribution / packaging
+.Python
+build/
+dist/
+wheels/
+*.egg
+
+# Environments
+.env
 venv/
+env/
+*/venv/
+*/env/
 
-# Logs, Outputs
-logs/
-*.log
-reports/
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+.Trashes
+Thumbs.db
+
+# Data and Reports
 data/
+reports/
 models/
-*.keras
-
-# Jupyter Notebooks
-.ipynb_checkpoints/
+logs/
