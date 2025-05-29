@@ -25,55 +25,39 @@ A estrutura de diretórios do projeto é organizada da seguinte forma:
 
 ```
 .
-├── .gitignore                  # Arquivo de configuração do Git para ignorar arquivos e diretórios.
-├── README.md                   # Este arquivo de documentação do projeto.
-├── requirements.txt            # Lista de dependências Python do projeto.
-├── data/                       # Diretório para dados.
-│   ├── data_dictionary.csv     # Dicionário de dados processado (Gerado).
+├── .gitignore                  
+├── README.md                   
+├── requirements.txt            
+├── data/                       # Diretório para dados (Gerado).
+│   ├── data_dictionary.csv     # Dicionário de dados processado .
 │   ├── data_entry.csv          # Arquivo de entrada original do dataset.
-│   ├── source_dictionary.csv   # Dicionário de dados original (Gerado).
-│   ├── train/                  # Subconjunto de dados para treinamento (Gerado).
-│   │   ├── AP/                 # Imagens na posição AP.
-│   │   │   ├── 0/              # Imagens sem efusão.
-│   │   │   └── 1/              # Imagens com efusão.
-│   │   └── PA/                 # Imagens na posição PA.
-│   │       ├── 0/              # Imagens sem efusão.
-│   │       └── 1/              # Imagens com efusão.
-│   ├── validation/             # Subconjunto de dados para validação (Gerado).
-│   │   ├── PA/                 # Imagens na posição PA.
-│   │       ├── 0/              # Imagens sem efusão.
-│   │       └── 1/              # Imagens com efusão.
-├── logs/                       # Diretório para arquivos de log.
-│   └── app.log                 # Log principal da aplicação (Gerado).
-├── models/                     # Diretório para modelos treinados.
-│   └── best_model_pa_effusion.keras # Modelo de Deep Learning treinado (Gerado).
-├── reports/                    # Diretório para relatórios e gráficos gerados.
-│   ├── age_distribution_by_view_position.png # Gráfico de distribuição de idade por posição de visualização (Gerado).
-│   ├── average_age_per_finding.png # Gráfico de idade média por achado (Gerado).
-│   ├── findings_frequency.png  # Gráfico de frequência de achados (Gerado).
-│   ├── gender_distribution_per_finding.png # Gráfico de distribuição de gênero por achado (Gerado).
-│   ├── patient_gender_distribution.png # Gráfico de distribuição de gênero do paciente (Gerado).
-│   └── view_positions_by_gender.png # Gráfico de posições de visualização por gênero (Gerado).
-└── src/                        # Código fonte do projeto.
-    ├── __init__.py             # Inicializa o pacote Python.
+│   ├── source_dictionary.csv   # Dicionário de dados original.
+│   ├── train/                  # Subconjunto de dados para treinamento.
+│   ├── validation/             # Subconjunto de dados para validação.
+│   └── test/                   # Subconjunto de dados para teste.
+├── logs/                       # Diretório para arquivos de log (Gerado).
+├── models/                     # Diretório para modelos treinados (Gerado).
+├── reports/                    # Diretório para relatórios e gráficos (Gerado).
+└── src/                        
+    ├── __init__.py   
     ├── main.py                 # Ponto de entrada principal e orquestrador dos pipelines.
     ├── analysis/               # Módulos para análise de dados.
-    │   ├── __init__.py         # Inicializa o pacote.
-    │   └── descriptive_statistics.py # Módulo para estatísticas descritivas.
+    │   ├── __init__.py   
+    │   └── descriptive_statistics.py 
     ├── data/                   # Módulos para carregamento e processamento de dados.
-    │   ├── __init__.py         # Inicializa o pacote.
-    │   ├── data_loader.py      # Módulo para carregar dados.
-    │   ├── data_processor.py   # Módulo para processar dados.
-    │   ├── data_saver.py       # Módulo para salvar dados.
-    │   └── image_processor.py  # Módulo para processar imagens.
+    │   ├── __init__.py         
+    │   ├── data_loader.py      
+    │   ├── data_processor.py   
+    │   ├── data_saver.py       
+    │   └── image_processor.py  
     ├── models/                 # Módulos para construção e avaliação de modelos.
-    │   ├── __init__.py         # Inicializa o pacote.
-    │   ├── data_loader_tf.py   # Módulo para carregar dados para TensorFlow.
-    │   ├── model_builder.py    # Módulo para construir o modelo.
-    │   ├── model_evaluator.py  # Módulo para avaliar o modelo.
-    │   └── model_trainer.py    # Módulo para treinar o modelo.
+    │   ├── __init__.py    
+    │   ├── data_loader_tf.py 
+    │   ├── model_builder.py   
+    │   ├── model_evaluator.py 
+    │   └── model_trainer.py  
     └── utils/                  # Módulos de utilidades.
-        ├── __init__.py         # Inicializa o pacote.
+        ├── __init__.py         
         ├── constants.py        # Módulo para constantes do projeto.
         └── logger.py           # Módulo para configuração de logging.
 ```
