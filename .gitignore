@@ -1,6 +1,18 @@
-archive/
-data/test/
-data/train/
-data/validation
+# Byte-code files
+*.pyc
+__pycache__/
+
+# Virtual environment
 .venv/
+venv/
+
+# Logs, Outputs
+logs/
+*.log
+reports/
+data/
+models/
+*.keras
+
+# Jupyter Notebooks
 .ipynb_checkpoints/
