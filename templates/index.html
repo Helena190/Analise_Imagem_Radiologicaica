@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificador de Raio-X de Tórax</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        .upload-form, .actions, .result { margin-bottom: 20px; text-align: center; }
+        input[type="file"] { margin-bottom: 10px; }
+        button, input[type="submit"] {
+            background-color: #007bff; color: white; border: none; padding: 10px 15px;
+            border-radius: 5px; cursor: pointer; font-size: 16px; margin: 5px;
+        }
+        button:hover, input[type="submit"]:hover { background-color: #0056b3; }
+        .remove-button { background-color: #dc3545; }
+        .remove-button:hover { background-color: #c82333; }
+        img { max-width: 100%; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px;}
+        .prediction { font-size: 1.2em; font-weight: bold; margin-top: 15px; padding: 10px; border-radius: 5px; }
+        .prediction.positive { background-color: #ffeeba; color: #856404; border: 1px solid #ffddba;}
+        .prediction.negative { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+        .prediction.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+        .flash-messages { list-style: none; padding: 0; }
+        .flash-messages li { padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .flash-messages .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .flash-messages .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .flash-messages .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .flash-messages .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Detector de Efusão em Raio-X de Tórax</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="upload-form">
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('index') }}">
+                <input type="file" name="file" accept="image/png, image/jpeg, image/jpg" required>
+                <br>
+                <input type="submit" value="Adicionar Imagem">
+            </form>
+        </div>
+
+        {% if filename %}
+            <div class="image-display" style="text-align:center;">
+                <h2>Imagem Carregada:</h2>
+                <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded X-ray">
+            </div>
+
+            <div class="actions">
+                <form method="post" action="{{ url_for('classify_image') }}" style="display: inline;">
+                    <button type="submit">Classificar Imagem</button>
+                </form>
+                <form method="post" action="{{ url_for('remove_image') }}" style="display: inline;">
+                    <button type="submit" class="remove-button">Remover Imagem</button>
+                </form>
+            </div>
+        {% endif %}
+
+        {% if prediction %}
+            <div class="result">
+                <h2>Resultado da Classificação:</h2>
+                {% if "Error:" in prediction or error_message %}
+                    <p class="prediction error">{{ prediction or error_message }}</p>
+                {% elif "Sem achado" in prediction %}
+                    <p class="prediction negative">{{ prediction }}</p>
+                {% else %}
+                    <p class="prediction positive">{{ prediction }}</p>
+                {% endif %}
+            </div>
+        {% elif error_message and not filename %} <!-- Show general errors if no file and no prediction -->
+             <div class="result">
+                <p class="prediction error">{{ error_message }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
