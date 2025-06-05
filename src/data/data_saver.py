@@ -4,29 +4,23 @@ from src.utils.constants import DATA_DIR, PROCESSED_DATA_FILENAME, DATA_DICTIONA
 from src.utils.logger import logger
 
 class DataSaver:
-    """
-    Lida com o salvamento de dataframes processados e dicionários de dados em arquivos CSV.
-    """
+    """salva dataframes processados e dicionários de dados em arquivos csv."""
     def __init__(self, data_path=DATA_DIR):
         self.data_path = data_path
         os.makedirs(self.data_path, exist_ok=True)
-        logger.info(f"DataSaver initialized. Data will be saved to: {self.data_path}")
+        logger.info(f"datasaver inicializado. os dados serão salvos em: {self.data_path}")
 
     def save_processed_data(self, df: pd.DataFrame):
-        """
-        Salva o DataFrame processado final em um arquivo CSV.
-        """
+        """salva o dataframe processado final em um arquivo csv."""
         filepath = os.path.join(self.data_path, PROCESSED_DATA_FILENAME)
         try:
             df.to_csv(filepath, index=False)
-            logger.info(f"Processed data saved successfully to '{filepath}'.")
+            logger.info(f"dados processados salvos com sucesso em '{filepath}'.")
         except Exception as e:
-            logger.error(f"Error saving processed data to '{filepath}': {e}")
+            logger.error(f"erro ao salvar dados processados em '{filepath}': {e}")
 
     def save_source_data_dictionary(self):
-        """
-        Cria e salva o dicionário de dados para os dados de origem originais.
-        """
+        """cria e salva o dicionário de dados para os dados de origem originais."""
         data_dictionary = {
             'Nome da Coluna': [
                 IMAGE_INDEX_COL,
@@ -42,46 +36,43 @@ class DataSaver:
                 'OriginalImagePixelSpacing_y'
             ],
             'Tipo de Dado': [
-                'string',  # Nome do arquivo
-                'string',  # Rótulos de achados (pode conter '|')
-                'integer', # Número de acompanhamento
-                'integer', # ID do paciente
-                'integer', # Idade do paciente
-                'string',  # Gênero ('M' ou 'F')
-                'string',  # Posição de visualização ('PA', 'AP', etc.)
-                'integer', # Largura da imagem
-                'integer', # Altura da imagem
-                'float',   # Espaçamento pixel X
-                'float'    # Espaçamento pixel Y
+                'string',
+                'string',
+                'integer',
+                'integer',
+                'integer',
+                'string',
+                'string',
+                'integer',
+                'integer',
+                'float',
+                'float'
             ],
             'Descrição': [
-                'Nome do arquivo de imagem radiográfica correspondente a esta entrada de dados.',
-                'Rótulos indicando a presença de achados clínicos ou doenças identificados na imagem. Múltiplos achados para a mesma imagem são separados por "|". O rótulo "No Finding" indica que nenhum achado foi identificado.',
-                'Número sequencial da consulta ou acompanhamento do paciente para a qual esta radiografia foi tirada. O valor 0 geralmente indica a primeira consulta ou exame base.',
-                'Identificador único para cada paciente no conjunto de dados. Permite agrupar múltiplas entradas (radiografias) pertencentes ao mesmo paciente.',
-                'Idade do paciente em anos no momento da realização da radiografia.',
-                'Gênero do paciente, indicado como "M" para Masculino e "F" para Feminino.',
-                'Posição em que a radiografia foi tirada, indicando a orientação do paciente em relação ao equipamento de raio-X. Exemplos comuns incluem "PA" (Posteroanterior) e "AP" (Anteroposterior).',
-                'Largura da imagem radiográfica original em pixels.',
-                'Altura da imagem radiográfica original em pixels.',
-                'Espaçamento entre pixels no eixo horizontal (X) da imagem original, geralmente medido em milímetros (mm).',
-                'Espaçamento entre pixels no eixo vertical (Y) da imagem original, geralmente medido em milímetros (mm).'
+                'nome do arquivo de imagem radiográfica correspondente a esta entrada de dados.',
+                'rótulos indicando a presença de achados clínicos ou doenças identificados na imagem. múltiplos achados para a mesma imagem são separados por "|". o rótulo "no finding" indica que nenhum achado foi identificado.',
+                'número sequencial da consulta ou acompanhamento do paciente para a qual esta radiografia foi tirada. o valor 0 geralmente indica a primeira consulta ou exame base.',
+                'identificador único para cada paciente no conjunto de dados. permite agrupar múltiplas entradas (radiografias) pertencentes ao mesmo paciente.',
+                'idade do paciente em anos no momento da realização da radiografia.',
+                'gênero do paciente, indicado como "m" para masculino e "f" para feminino.',
+                'posição em que a radiografia foi tirada, indicando a orientação do paciente em relação ao equipamento de raio-x. exemplos comuns incluem "pa" (posteroanterior) e "ap" (anteroposterior).',
+                'largura da imagem radiográfica original em pixels.',
+                'altura da imagem radiográfica original em pixels.',
+                'espaçamento entre pixels no eixo horizontal (x) da imagem original, geralmente medido em milímetros (mm).',
+                'espaçamento entre pixels no eixo vertical (y) da imagem original, geralmente medido em milímetros (mm).'
             ]
         }
         df_dictionary = pd.DataFrame(data_dictionary)
         output_filename = os.path.join(self.data_path, SOURCE_DICTIONARY_FILENAME)
         try:
             df_dictionary.to_csv(output_filename, index=False, encoding='utf-8')
-            logger.info(f"Source data dictionary created and saved to '{output_filename}'.")
-            logger.info("\nContent of source dictionary:\n" + str(df_dictionary))
+            logger.info(f"dicionário de dados de origem criado e salvo em '{output_filename}'.")
+            logger.info("\nconteúdo do dicionário de origem:\n" + str(df_dictionary))
         except Exception as e:
-            logger.error(f"Error saving source data dictionary to '{output_filename}': {e}")
+            logger.error(f"erro ao salvar dicionário de dados de origem em '{output_filename}': {e}")
 
     def save_processed_data_dictionary(self, df: pd.DataFrame):
-        """
-        Cria e salva o dicionário de dados para os dados processados,
-        incluindo descrições para valores codificados.
-        """
+        """cria e salva o dicionário de dados para os dados processados, incluindo descrições para valores codificados."""
         data_dictionary_data = {
             'Nome da Coluna': [],
             'Tipo de Dado': [],
@@ -93,32 +84,31 @@ class DataSaver:
             data_dictionary_data['Tipo de Dado'].append(dtype)
 
             if col_name == FINDING_LABELS_COL:
-                data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("0: Sem achado ('No Finding'), 1: Efusão ('Effusion')")
+                data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("0: sem achado ('no finding'), 1: efusão ('effusion')")
             elif col_name == PATIENT_GENDER_COL:
-                data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("0: Masculino ('M'), 1: Feminino ('F')")
+                data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("0: masculino ('m'), 1: feminino ('f')")
             elif col_name == VIEW_POSITION_COL:
-                data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("0: Posteroanterior ('PA'), 1: Anteroposterior ('AP')")
+                data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("0: posteroanterior ('pa'), 1: anteroposterior ('ap')")
             else:
                 if col_name == IMAGE_INDEX_COL:
-                    data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("Nome do arquivo de imagem")
+                    data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("nome do arquivo de imagem")
                 elif col_name == PATIENT_AGE_COL:
-                    data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("Idade do paciente em anos")
+                    data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("idade do paciente em anos")
                 else:
-                    data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("N/A")
+                    data_dictionary_data['Descrição dos Valores (quando aplicável)'].append("n/a")
 
         data_dictionary_df = pd.DataFrame(data_dictionary_data)
         filepath = os.path.join(self.data_path, DATA_DICTIONARY_FILENAME)
         try:
             data_dictionary_df.to_csv(filepath, index=False, encoding='utf-8')
-            logger.info(f"Processed data dictionary created and saved to '{filepath}'.")
+            logger.info(f"dicionário de dados processados criado e salvo em '{filepath}'.")
         except Exception as e:
-            logger.error(f"Error saving processed data dictionary to '{filepath}': {e}")
+            logger.error(f"erro ao salvar dicionário de dados processados em '{filepath}': {e}")
 
 if __name__ == "__main__":
-    logger.info("Running DataSaver example...")
+    logger.info("executando exemplo de datasaver...")
     saver = DataSaver()
 
-    # Dados processados dummy para teste
     dummy_processed_data = {
         'Image Index': ['img1.png', 'img2.png'],
         'Finding Labels': [0, 1],

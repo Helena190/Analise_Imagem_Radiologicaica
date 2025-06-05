@@ -2,13 +2,7 @@ import logging
 import os
 
 def setup_logging(log_file='app.log', level=logging.INFO):
-    """
-    Configura o registro (logging) para a aplicação.
-
-    Args:
-        log_file (str): O nome do arquivo de log.
-        level (int): O nível de log (ex: logging.INFO, logging.DEBUG).
-    """
+    """configura o registro (logging) para a aplicação."""
     log_dir = 'logs'
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
@@ -23,15 +17,12 @@ def setup_logging(log_file='app.log', level=logging.INFO):
             logger.removeHandler(handler)
             handler.close()
 
-    # Cria handlers
     c_handler = logging.StreamHandler()
     f_handler = logging.FileHandler(log_filepath)
 
-    # Define os níveis para os handlers
     c_handler.setLevel(level)
     f_handler.setLevel(level)
 
-    # Cria formatadores e os adiciona aos handlers
     c_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     c_handler.setFormatter(c_format)
@@ -45,6 +36,6 @@ def setup_logging(log_file='app.log', level=logging.INFO):
 logger = setup_logging()
 
 if __name__ == "__main__":
-    logger.info("This is an info message from logger.py")
-    logger.warning("This is a warning message from logger.py")
-    logger.error("This is an error message from logger.py")
+    logger.info("esta é uma mensagem de informação de logger.py")
+    logger.warning("esta é uma mensagem de aviso de logger.py")
+    logger.error("esta é uma mensagem de erro de logger.py")

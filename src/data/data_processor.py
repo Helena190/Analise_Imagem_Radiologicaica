@@ -6,17 +6,12 @@ from src.utils.constants import (
 )
 
 class DataProcessor:
-    """
-    Lida com o processamento dos dados brutos, incluindo a remoção de colunas,
-    filtragem, balanceamento e codificação de características categóricas.
-    """
+    """processa dados brutos: remove colunas, filtra, balanceia e codifica características."""
     def __init__(self):
-        logger.info("DataProcessor initialized.")
+        logger.info("dataprocessor inicializado.")
 
     def drop_unnecessary_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Remove colunas que não são necessárias para a análise ou treinamento do modelo.
-        """
+        """remove colunas desnecessárias para análise ou treinamento."""
         columns_to_drop = [
             'Follow-up #',
             'Patient ID',
@@ -27,45 +22,39 @@ class DataProcessor:
             'Unnamed: 11'
         ]
         
-        # Filtra colunas que não existem no DataFrame
         existing_columns_to_drop = [col for col in columns_to_drop if col in df.columns]
         
         if existing_columns_to_drop:
             df.drop(columns=existing_columns_to_drop, axis=1, inplace=True)
-            logger.info(f"Dropped columns: {existing_columns_to_drop}")
+            logger.info(f"colunas removidas: {existing_columns_to_drop}")
         else:
-            logger.warning("No unnecessary columns found to drop based on predefined list.")
+            logger.warning("nenhuma coluna desnecessária encontrada para remover com base na lista predefinida.")
         return df
 
     def analyze_finding_labels(self, df: pd.DataFrame):
-        """
-        Analisa e registra as contagens de rótulos de achados individuais.
-        """
+        """analisa e registra as contagens de rótulos de achados individuais."""
         if FINDING_LABELS_COL in df.columns:
             finding_labels_series = df[FINDING_LABELS_COL]
             split_labels = finding_labels_series.str.split('|')
             all_individual_labels = split_labels.explode()
             disease_counts = all_individual_labels.value_counts()
-            logger.info(f"Count of occurrences for each finding label:\n{disease_counts}")
+            logger.info(f"contagem de ocorrências para cada rótulo de achado:\n{disease_counts}")
         else:
-            logger.warning(f"Column '{FINDING_LABELS_COL}' not found for analysis.")
+            logger.warning(f"coluna '{FINDING_LABELS_COL}' não encontrada para análise.")
 
     def filter_and_balance_data(self, df: pd.DataFrame, target_label: str = 'Effusion') -> pd.DataFrame:
-        """
-        Filtra o DataFrame para incluir apenas o rótulo alvo e 'No Finding',
-        então balanceia o conjunto de dados com base na 'View Position'.
-        """
+        """filtra o dataframe para incluir apenas o rótulo alvo e 'no finding', então balanceia o conjunto de dados com base na 'view position'."""
         if FINDING_LABELS_COL not in df.columns or VIEW_POSITION_COL not in df.columns:
-            logger.error(f"Required columns '{FINDING_LABELS_COL}' or '{VIEW_POSITION_COL}' not found for filtering and balancing.")
+            logger.error(f"colunas necessárias '{FINDING_LABELS_COL}' ou '{VIEW_POSITION_COL}' não encontradas para filtragem e balanceamento.")
             return df
 
         selected_df = df[df[FINDING_LABELS_COL].str.contains(target_label, na=False)].copy()
         selected_df[FINDING_LABELS_COL] = target_label
-        logger.info(f"Filtered for '{target_label}'. Original dataset size: {len(df)}, '{target_label}' entries: {len(selected_df)}")
+        logger.info(f"filtrado para '{target_label}'. tamanho do dataset original: {len(df)}, entradas de '{target_label}': {len(selected_df)}")
 
         pa_count = (selected_df[VIEW_POSITION_COL] == 'PA').sum()
         ap_count = (selected_df[VIEW_POSITION_COL] == 'AP').sum()
-        logger.info(f"Count of entries for '{target_label}' by view position: PA={pa_count}, AP={ap_count}")
+        logger.info(f"contagem de entradas para '{target_label}' por posição de visualização: pa={pa_count}, ap={ap_count}")
 
         no_finding_df = df[df[FINDING_LABELS_COL] == 'No Finding'].copy()
 
@@ -74,9 +63,9 @@ class DataProcessor:
             pa_no_finding_subset = no_finding_df[no_finding_df[VIEW_POSITION_COL] == 'PA']
             if len(pa_no_finding_subset) >= pa_count:
                 pa_no_finding_sample = pa_no_finding_subset.sample(n=pa_count, random_state=42)
-                logger.info(f"Sampled {pa_count} 'No Finding' + 'PA' entries.")
+                logger.info(f"amostradas {pa_count} entradas 'no finding' + 'pa'.")
             else:
-                logger.warning(f"Not enough 'No Finding' + 'PA' entries ({len(pa_no_finding_subset)}) to sample {pa_count}. Selecting all existing.")
+                logger.warning(f"não há entradas 'no finding' + 'pa' suficientes ({len(pa_no_finding_subset)}) para amostrar {pa_count}. selecionando todas as existentes.")
                 pa_no_finding_sample = pa_no_finding_subset.copy()
 
         ap_no_finding_sample = pd.DataFrame()
@@ -84,72 +73,64 @@ class DataProcessor:
             ap_no_finding_subset = no_finding_df[no_finding_df[VIEW_POSITION_COL] == 'AP']
             if len(ap_no_finding_subset) >= ap_count:
                 ap_no_finding_sample = ap_no_finding_subset.sample(n=ap_count, random_state=42)
-                logger.info(f"Sampled {ap_count} 'No Finding' + 'AP' entries.")
+                logger.info(f"amostradas {ap_count} entradas 'no finding' + 'ap'.")
             else:
-                logger.warning(f"Not enough 'No Finding' + 'AP' entries ({len(ap_no_finding_subset)}) to sample {ap_count}. Selecting all existing.")
+                logger.warning(f"não há entradas 'no finding' + 'ap' suficientes ({len(ap_no_finding_subset)}) para amostrar {ap_count}. selecionando todas as existentes.")
                 ap_no_finding_sample = ap_no_finding_subset.copy()
 
         final_balanced_df = pd.concat([selected_df, pa_no_finding_sample, ap_no_finding_sample], ignore_index=True)
-        logger.info(f"Final balanced DataFrame size: {len(final_balanced_df)}")
-        logger.info(f"Distribution of '{FINDING_LABELS_COL}' in balanced DataFrame:\n{final_balanced_df[FINDING_LABELS_COL].value_counts()}")
-        logger.info(f"Distribution of '{VIEW_POSITION_COL}' in balanced DataFrame:\n{final_balanced_df[VIEW_POSITION_COL].value_counts()}")
+        logger.info(f"tamanho final do dataframe balanceado: {len(final_balanced_df)}")
+        logger.info(f"distribuição de '{FINDING_LABELS_COL}' no dataframe balanceado:\n{final_balanced_df[FINDING_LABELS_COL].value_counts()}")
+        logger.info(f"distribuição de '{VIEW_POSITION_COL}' no dataframe balanceado:\n{final_balanced_df[VIEW_POSITION_COL].value_counts()}")
         return final_balanced_df
 
     def encode_categorical_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Codifica características categóricas ('Finding Labels', 'Patient Gender', 'View Position')
-        em representações numéricas.
-        """
+        """codifica características categóricas ('finding labels', 'patient gender', 'view position') em representações numéricas."""
         finding_labels_map = {'No Finding': 0, 'Effusion': 1}
         gender_map = {'M': 0, 'F': 1}
         view_position_map = {'PA': 0, 'AP': 1}
 
         if FINDING_LABELS_COL in df.columns:
             df[FINDING_LABELS_COL] = df[FINDING_LABELS_COL].map(finding_labels_map)
-            logger.info(f"Encoded '{FINDING_LABELS_COL}'.")
+            logger.info(f"codificado '{FINDING_LABELS_COL}'.")
         else:
-            logger.warning(f"Column '{FINDING_LABELS_COL}' not found for encoding.")
+            logger.warning(f"coluna '{FINDING_LABELS_COL}' não encontrada para codificação.")
 
         if PATIENT_GENDER_COL in df.columns:
             df[PATIENT_GENDER_COL] = df[PATIENT_GENDER_COL].map(gender_map)
-            logger.info(f"Encoded '{PATIENT_GENDER_COL}'.")
+            logger.info(f"codificado '{PATIENT_GENDER_COL}'.")
         else:
-            logger.warning(f"Column '{PATIENT_GENDER_COL}' not found for encoding.")
+            logger.warning(f"coluna '{PATIENT_GENDER_COL}' não encontrada para codificação.")
 
         if VIEW_POSITION_COL in df.columns:
             df[VIEW_POSITION_COL] = df[VIEW_POSITION_COL].map(view_position_map)
-            logger.info(f"Encoded '{VIEW_POSITION_COL}'.")
+            logger.info(f"codificado '{VIEW_POSITION_COL}'.")
         else:
-            logger.warning(f"Column '{VIEW_POSITION_COL}' not found for encoding.")
+            logger.warning(f"coluna '{VIEW_POSITION_COL}' não encontrada para codificação.")
         
-        logger.info("Data types after encoding:\n" + str(df.dtypes))
+        logger.info("tipos de dados após a codificação:\n" + str(df.dtypes))
         return df
 
     def create_stratify_column(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Cria uma coluna combinada para estratificação com base nos rótulos de achados e posição de visualização.
-        """
+        """cria uma coluna combinada para estratificação com base nos rótulos de achados e posição de visualização."""
         if FINDING_LABELS_COL in df.columns and VIEW_POSITION_COL in df.columns:
             df[STRATIFY_COL] = df[FINDING_LABELS_COL].astype(str) + '_' + df[VIEW_POSITION_COL].astype(str)
-            logger.info(f"Created stratification column '{STRATIFY_COL}'.")
+            logger.info(f"coluna de estratificação '{STRATIFY_COL}' criada.")
         else:
-            logger.warning(f"Could not create stratification column. Missing '{FINDING_LABELS_COL}' or '{VIEW_POSITION_COL}'.")
+            logger.warning(f"não foi possível criar a coluna de estratificação. faltando '{FINDING_LABELS_COL}' ou '{VIEW_POSITION_COL}'.")
         return df
 
     def process_data(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Orquestra todo o pipeline de processamento de dados.
-        """
+        """orquestra todo o pipeline de processamento de dados."""
         df = self.drop_unnecessary_columns(df)
-        self.analyze_finding_labels(df) # Apenas para log, não modifica o df
+        self.analyze_finding_labels(df) # apenas para log, não modifica o df
         df = self.filter_and_balance_data(df)
         df = self.encode_categorical_features(df)
         df = self.create_stratify_column(df)
         return df
 
 if __name__ == "__main__":
-    # Exemplo de uso com um DataFrame dummy
-    logger.info("Running DataProcessor example...")
+    logger.info("executando exemplo de dataprocessor...")
     dummy_data = {
         'Image Index': ['img1.png', 'img2.png', 'img3.png', 'img4.png', 'img5.png', 'img6.png'],
         'Finding Labels': ['No Finding', 'Effusion', 'Effusion|Cardiomegaly', 'No Finding', 'Effusion', 'No Finding'],
@@ -167,15 +148,15 @@ if __name__ == "__main__":
     dummy_df = pd.DataFrame(dummy_data)
 
     processor = DataProcessor()
-    processed_df = processor.process_data(dummy_df.copy()) # Usa .copy() para evitar modificar o dummy_df original
+    processed_df = processor.process_data(dummy_df.copy()) # usa .copy() para evitar modificar o dummy_df original
 
-    logger.info("\nProcessed DataFrame head:")
+    logger.info("\ncabeçalho do dataframe processado:")
     logger.info(processed_df.head())
-    logger.info("\nProcessed DataFrame value counts for Finding Labels:")
+    logger.info("\ncontagens de valores do dataframe processado para finding labels:")
     logger.info(processed_df[FINDING_LABELS_COL].value_counts())
-    logger.info("\nProcessed DataFrame value counts for View Position:")
+    logger.info("\ncontagens de valores do dataframe processado para view position:")
     logger.info(processed_df[VIEW_POSITION_COL].value_counts())
-    logger.info("\nProcessed DataFrame value counts for Patient Gender:")
+    logger.info("\ncontagens de valores do dataframe processado para patient gender:")
     logger.info(processed_df[PATIENT_GENDER_COL].value_counts())
-    logger.info("\nProcessed DataFrame dtypes:")
+    logger.info("\ntipos de dados do dataframe processado:")
     logger.info(processed_df.dtypes)
