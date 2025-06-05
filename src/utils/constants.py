@@ -40,3 +40,6 @@ ORIGINAL_IMAGE_PIXEL_SPACING_Y_COL = 'OriginalImagePixelSpacing_y'
 UNNAMED_COL = 'Unnamed: 11'
 STRATIFY_COL = 'stratify_col'
 SOURCE_PATH_COL = 'source_path'
+
+EVALUATION_CONFUSION_MATRIX_FILENAME = 'evaluation_confusion_matrix.png'
+EVALUATION_CLASSIFICATION_REPORT_FILENAME = 'evaluation_classification_report.txt'
