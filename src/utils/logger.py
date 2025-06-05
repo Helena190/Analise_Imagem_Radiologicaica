@@ -15,11 +15,9 @@ def setup_logging(log_file='app.log', level=logging.INFO):
     
     log_filepath = os.path.join(log_dir, log_file)
 
-    # Cria um logger
     logger = logging.getLogger(__name__)
     logger.setLevel(level)
 
-    # Limpa handlers existentes para evitar logs duplicados em Jupyter/re-execuções
     if logger.handlers:
         for handler in logger.handlers[:]:
             logger.removeHandler(handler)
@@ -39,13 +37,11 @@ def setup_logging(log_file='app.log', level=logging.INFO):
     c_handler.setFormatter(c_format)
     f_handler.setFormatter(f_format)
 
-    # Adiciona handlers ao logger
     logger.addHandler(c_handler)
     logger.addHandler(f_handler)
 
     return logger
 
-# Inicializa o logger para o módulo
 logger = setup_logging()
 
 if __name__ == "__main__":

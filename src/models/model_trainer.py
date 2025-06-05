@@ -11,7 +11,7 @@ class ModelTrainer:
     def __init__(self, epochs=EPOCHS, models_dir=MODELS_DIR, checkpoint_filename=MODEL_CHECKPOINT_FILENAME):
         self.epochs = epochs
         self.checkpoint_filepath = os.path.join(models_dir, checkpoint_filename)
-        os.makedirs(models_dir, exist_ok=True) # Garante que o diretório de modelos exista
+        os.makedirs(models_dir, exist_ok=True)
         logger.info(f"ModelTrainer initialized. Model checkpoints will be saved to: {self.checkpoint_filepath}")
 
     def train_model(self, model: keras.Model, train_ds: tf.data.Dataset, validation_ds: tf.data.Dataset):
@@ -28,7 +28,6 @@ class ModelTrainer:
         """
         logger.info("Starting model training...")
 
-        # Callbacks para treinamento
         early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
         model_checkpoint = keras.callbacks.ModelCheckpoint(filepath=self.checkpoint_filepath, save_best_only=True, monitor='val_loss')
 
